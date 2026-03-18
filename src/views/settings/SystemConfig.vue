@@ -46,7 +46,12 @@
         >
           <template #prepend>
             <v-avatar color="purple" size="48">
-              <v-icon :icon="item.icon" size="24" color="white" />
+              <component
+                :is="item.icon"
+                v-if="typeof item.icon !== 'string'"
+                class="size-6 text-white"
+              />
+              <v-icon v-else :icon="item.icon" size="24" color="white" />
             </v-avatar>
           </template>
 
@@ -72,7 +77,8 @@ import Container from "@/components/Container.vue";
 import ProviderIcon from "@/components/ProviderIcon.vue";
 import { api } from "@/plugins/api";
 import { CoreConfig } from "@/plugins/api/interfaces";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed, type Component } from "vue";
+import GenreIcon from "@/components/icons/GenreIcon.vue";
 import { useRouter } from "vue-router";
 import { useI18n } from "vue-i18n";
 
@@ -83,8 +89,18 @@ const { t } = useI18n();
 // local refs
 const coreConfigs = ref<CoreConfig[]>([]);
 
+interface SystemConfigExtraEntry {
+  domain: string;
+  route: string;
+  name: string;
+  description: string;
+  icon: string | Component;
+}
+
+type SystemConfigItem = CoreConfig | SystemConfigExtraEntry;
+
 // Extra system entries that are not core modules
-const extraSystemEntries = [
+const extraSystemEntries: SystemConfigExtraEntry[] = [
   {
     domain: "logging",
     name: "settings.system_logging",
@@ -96,7 +112,7 @@ const extraSystemEntries = [
     domain: "genre_management",
     name: "settings.genre_management",
     description: "settings.genre_management_description",
-    icon: "mdi-compass-outline",
+    icon: GenreIcon,
     route: "/settings/genremanagement",
   },
 ];
@@ -127,8 +143,8 @@ const getItemDescription = (item: CoreConfig) => {
     : api.providerManifests[item.domain].description;
 };
 
-const handleItemClick = function (item: any) {
-  if (item.route) {
+const handleItemClick = function (item: SystemConfigItem) {
+  if ("route" in item && item.route) {
     // Extra entry with custom route
     router.push(item.route);
   } else {

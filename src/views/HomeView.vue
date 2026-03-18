@@ -2,7 +2,7 @@
   <div>
     <Toolbar
       :is-discover-page="true"
-      :icon="House"
+      :icon="Compass"
       color="background"
       :title="$t('discover')"
     />
@@ -31,7 +31,7 @@
       </div>
     </v-alert>
 
-    <Container variant="comfortable">
+    <Container variant="comfortable" class="!pr-0">
       <Suspense>
         <div>
           <HomeWidgetRows :edit-mode="editMode" />
@@ -49,7 +49,7 @@ import Toolbar from "@/components/Toolbar.vue";
 import { api } from "@/plugins/api";
 import { authManager } from "@/plugins/auth";
 import { eventbus } from "@/plugins/eventbus";
-import { House } from "lucide-vue-next";
+import { Compass } from "lucide-vue-next";
 import { onMounted, onUnmounted, ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -136,6 +136,12 @@ onUnmounted(() => {
   .provider-warning-content {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+
+@media (max-width: 575px) {
+  :deep(.container-comfortable) {
+    padding: 12px;
   }
 }
 </style>

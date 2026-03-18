@@ -1,3 +1,5 @@
+import { store } from '@/plugins/store';
+
 <template>
   <!-- gradient background panel to make the footer player more elevated (and hide content behind it)-->
   <div
@@ -14,15 +16,7 @@
 
   <!-- bottom navigation for mobile layout -->
   <!-- add a tiny bit of bottom-padding to avoid overlap with (iOS) bottom bar -->
-  <BottomNavigation
-    v-if="store.mobileLayout"
-    app
-    :style="
-      store.isInPWAMode && !store.isIngressSession
-        ? 'padding-bottom: 10px;height: 70px;'
-        : 'height: 60px;'
-    "
-  />
+  <BottomNavigation v-if="store.mobileLayout" app style="height: 60px" />
 
   <v-footer
     app
@@ -32,18 +26,23 @@
         ? 'mediacontrols-player-float'
         : 'mediacontrols-player-default'
     }`"
-    :style="
-      store.isInPWAMode && !store.isIngressSession ? 'margin-bottom: 10px;' : ''
-    "
+    :style="[
+      store.mobileLayout && store.showPlayersMenu
+        ? 'z-index: 999 !important;'
+        : '',
+      store.isInPWAMode && !store.isIngressSession
+        ? 'margin-bottom: 10px;'
+        : '',
+    ]"
   >
     <Player :use-floating-player="store.mobileLayout" />
   </v-footer>
 </template>
 
 <script setup lang="ts">
-import Player from "./PlayerOSD/Player.vue";
-import { store } from "@/plugins/store";
 import BottomNavigation from "@/components/navigation/BottomNavigation.vue";
+import { store } from "@/plugins/store";
+import Player from "./PlayerOSD/Player.vue";
 </script>
 
 <style>
@@ -75,8 +74,14 @@ import BottomNavigation from "@/components/navigation/BottomNavigation.vue";
 
 .v-bottom-navigation--active {
   box-shadow: none;
+  z-index: 2000 !important;
 }
+
 .v-footer {
-  z-index: 1200 !important;
+  z-index: 1000 !important;
+}
+
+.v-footer.mediacontrols-player-float {
+  z-index: 2001 !important;
 }
 </style>

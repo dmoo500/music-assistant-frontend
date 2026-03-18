@@ -11,7 +11,7 @@
     :allow-key-hooks="true"
     :show-search-button="true"
     :sort-keys="sortKeys"
-    :icon="Compass"
+    :icon="GenreIcon"
     :restore-state="restoreState"
     :total="total"
     :show-provider-filter="true"
@@ -28,7 +28,8 @@ import api from "@/plugins/api";
 import { EventMessage, EventType } from "@/plugins/api/interfaces";
 import { authManager } from "@/plugins/auth";
 import { store } from "@/plugins/store";
-import { Compass, Plus } from "lucide-vue-next";
+import GenreIcon from "@/components/icons/GenreIcon.vue";
+import { Plus } from "lucide-vue-next";
 import { computed, onBeforeUnmount, onMounted, ref } from "vue";
 
 defineOptions({
@@ -78,7 +79,7 @@ const loadItems = async function (params: LoadDataParams) {
     params.sortBy,
     params.provider && params.provider.length > 0 ? params.provider : undefined,
     params.genreIds,
-    params.hideEmptyFilter ?? true,
+    params.hideEmptyFilter,
   );
 };
 
